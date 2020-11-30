@@ -1,10 +1,9 @@
 package com.lxf.ui
 
 import com.lxf.bean.FileDetail
-import com.lxf.helper.getAllFilesEndWithMD
+import com.lxf.helper.getAllFilesEndWithMdOrTxt
 import com.lxf.helper.matchContent
 import com.lxf.helper.readAll
-import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -27,7 +26,7 @@ internal class HomeController {
     /**
      * 路径下所有文件中的所有匹配内容
      */
-    val matchContents: ObservableList<FileDetail> = FXCollections.observableArrayList<FileDetail>()
+    val matchContents: ObservableList<FileDetail> = FXCollections.observableArrayList()
     /**
      * 当前选中的匹配内容对应的文件内容
      */
@@ -48,11 +47,10 @@ internal class HomeController {
         matchContents.clear()
         val file = File(selectPath.get())
         GlobalScope.launch(Dispatchers.JavaFx) {
-            val fileList = getAllFilesEndWithMD(file, ArrayList())
+            val fileList = getAllFilesEndWithMdOrTxt(file, ArrayList())
             fileList.sortedBy { it.length() }
                     .filter { it.length() > 0 }
                     .forEach {
-                        println("====================${it.name}===================")
                         val contents = matchContent(it, content)
                         matchContents.addAll(contents)
                     }

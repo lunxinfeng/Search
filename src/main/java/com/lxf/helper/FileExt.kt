@@ -10,17 +10,17 @@ import java.io.File
 /**
  * 查询指定目录下的所有md文件
  */
-suspend fun getAllFilesEndWithMD(dir: File, fileList: MutableList<File>): List<File> {
+suspend fun getAllFilesEndWithMdOrTxt(dir: File, fileList: MutableList<File>): List<File> {
     return withContext(Dispatchers.IO) {
         if (!dir.isDirectory) {
             fileList.add(dir)
             return@withContext fileList
         }
-        val files = dir.listFiles { pathname -> pathname.canRead() && !pathname.isHidden && (pathname.name.endsWith(".md") || pathname.isDirectory) }
+        val files = dir.listFiles { pathname -> pathname.canRead() && !pathname.isHidden && (pathname.name.endsWith(".txt") || pathname.name.endsWith(".md") || pathname.isDirectory) }
         if (files != null) {
             for (file in files) {
                 if (file.isDirectory) {
-                    getAllFilesEndWithMD(file, fileList)
+                    getAllFilesEndWithMdOrTxt(file, fileList)
                 } else {
                     fileList.add(file)
                 }
